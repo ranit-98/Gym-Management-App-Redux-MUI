@@ -8,7 +8,7 @@ axiosInstance.interceptors.request.use(
     async function (config) {
         const token =
           localStorage.getItem("token") || sessionStorage.getItem("token");
-          config.headers["Content-Type"] = "application/json";
+          // config.headers["Content-Type"] = "application/json; charset=utf-8";
         if (token !== null || token !== undefined) {
           config.headers["x-access-token"] = token;
          

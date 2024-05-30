@@ -88,7 +88,7 @@ import { useDispatch } from "react-redux";
 import { fetchBlogDetails } from "../Redux/Slice/BlogDetails";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "../Layout/Layout";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   CardContent,
   CardMedia,
@@ -213,6 +213,7 @@ const BlogDetails = () => {
                 Recent Blogs
               </Typography>
               {blogData.slice(0,4).map((blog) => (
+                <Link to={`/blogDetail/${blog._id}`} >
                 <Card key={blog.id} sx={{ marginBottom: 2 }}>
                   <CardActionArea>
                     <CardMedia
@@ -231,6 +232,7 @@ const BlogDetails = () => {
                     </CardContent>
                   </CardActionArea>
                 </Card>
+                </Link>
               ))}
             </Box>
           </Grid>

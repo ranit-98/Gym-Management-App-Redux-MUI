@@ -128,6 +128,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axiosInstance from '../../API/AxiosInstance'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import { Navigate, useNavigate } from 'react-router-dom';
+
 
 // Initial state of the authentication slice
 const initialState = {
@@ -143,15 +145,17 @@ const initialState = {
 export const registerUser = createAsyncThunk("/signup", async (user) => {
   try {
     const response = await axiosInstance.post("register", user);
+    toast.success(response?.data.message)
     return response?.data;
   } catch (error) {
-    toast.error(error?.response?.data?.msg);
+    toast.error(error?.response?.data?.message);
     console.log(error);
   }
 });
 
 // Thunk to handle user login
 export const loginRequest = createAsyncThunk("login", async (user) => {
+
   try {
     const response = await axiosInstance.post("login", user);
     return response?.data;
@@ -210,6 +214,7 @@ export const AuthSlice = createSlice({
           localStorage.setItem("name", payload?.data.name);
           state.redirectReg = "/";
           state.user = payload.data;
+         
           toast.success(`Hi ${payload?.data?.name}, registration successful!`);
         }
         state.loading = false;

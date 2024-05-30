@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../Redux/Slice/AuthSlice";
 import Layout from "../Layout/Layout";
 const defaultTheme = createTheme();
@@ -32,38 +32,48 @@ const Register = () => {
     formState: { errors },
     reset
   } = useForm();
+  const authState = useSelector((state) => state?.auth) || {};
+  const { redirectReg, loading } = authState;
+  React.useEffect(()=>{
+    navigate(redirectReg)
+  },[redirectReg,dispatch,navigate])
   const [selectedImage, setSelectedImage] = React.useState(null);
-  const [img, setimg] = React.useState();
-  console.log(watch((data) => console.log(data)));
+  const [img, setimg] = React.useState(null);
+ 
   // Handle form submission
   const onSubmit = async (data) => {
   setIsLoading(true)
     console.log(data);
     const formdata = new FormData();
+    console.log('aaaa',img);
     formdata.append("name", data.name);
     formdata.append("email", data.email);
     formdata.append("phone", data.phone);
     formdata.append("password", data.password);
     formdata.append("answer", data.answer);
-    formdata.append("image", img);
+    if (img) {
+      formdata.append("image", img);
+    }
 
+  
     try {
-      await dispatch(registerUser(formdata))
-      reset()
-      navigate("/")
+      const res=await dispatch(registerUser(formdata))
+      console.log(res);
+      // reset()
+      
     } catch (error) {
       console.error("Error submitting data:", error);
       setIsLoading(false)
-      toast.error(error?.response?.data?.msg);
     }
   };
 
   // Handle image selection
   const handleImageChange = (event) => {
+   console.log('img',event,event.target.files[0])
     const file = event.target.files[0];
     setimg(file);
     if (file) {
-      setSelectedImage(URL.createObjectURL(file));
+      setSelectedImage(URL.createObjectURL(event.target.files[0]));
     }
   };
 
@@ -172,11 +182,10 @@ const Register = () => {
                     {/* Image file input */}
                     <TextField
                       fullWidth
-                      //label="Photo"
                       type="file"
                       accept="image/*"
-                      onChange={handleImageChange}
-                      id="photo"
+                       onChange={handleImageChange}
+                      id="image"
                     />
                     {/* {!img && <p style={{color:"red"}}>This field is required</p>} */}
                   </Grid>
