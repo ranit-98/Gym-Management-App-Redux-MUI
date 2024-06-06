@@ -10,6 +10,7 @@ import { booking } from '../Redux/Slice/BookingReqSlice';
 import { fetchBookingData } from '../Redux/Slice/BookingSlice';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Layout from '../Layout/Layout';
+import { RotatingLines } from 'react-loader-spinner';
 
 const theme = createTheme();
 
@@ -67,7 +68,30 @@ const Booking = () => {
   return (
     <ThemeProvider theme={theme}>
       <Layout>
-        <Grid container component="main" sx={{ height: '100vh' }}>
+        { !serviceName &&
+            <div
+              style={{
+                display: "grid",
+                placeItems: "center",
+                height: "100vh",
+                width: "100vw",
+              }}
+            >
+              <RotatingLines
+                visible={true}
+                height="96"
+                width="96"
+                color="blue"
+                strokeColor="blue"
+                strokeWidth="5"
+                animationDuration="0.75"
+                ariaLabel="rotating-lines-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            </div>
+        }
+        {serviceName && <Grid container component="main" sx={{ height: '100vh' }}>
           <CssBaseline />
           <Grid
             item
@@ -75,8 +99,8 @@ const Booking = () => {
             sm={4}
             md={7}
             sx={{
-             // backgroundImage: 'url(https://source.unsplash.com/random?fitness)',
-             backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+             backgroundImage: 'url(https://source.unsplash.com/random?fitness)',
+            // backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
               backgroundRepeat: 'no-repeat',
               backgroundColor: (t) =>
                 t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -114,6 +138,9 @@ const Booking = () => {
                   defaultValue={name}
                   autoFocus
                   {...register('name')}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -125,6 +152,9 @@ const Booking = () => {
                   autoComplete="email"
                   defaultValue={email}
                   {...register('email')}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
                 <input type="hidden" value={id} {...register('serviceId')} />
                 <TextField
@@ -137,6 +167,9 @@ const Booking = () => {
                   autoComplete="service_name"
                   defaultValue={serviceName}
                   {...register('service_name')}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
                 <Select
                   fullWidth
@@ -173,7 +206,7 @@ const Booking = () => {
               </Box>
             </Box>
           </Grid>
-        </Grid>
+        </Grid>}
       </Layout>
     </ThemeProvider>
   );
